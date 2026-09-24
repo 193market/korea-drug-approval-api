@@ -1,0 +1,582 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Korea Drug Approval & Interaction API",
+    "description": "Every drug product approved in Korea (about 43,000, with English product, company and ingredient names) and the MFDS DUR contraindication lists: contraindicated combinations (about 800,000 product pairs), pregnancy and age contraindications, elderly, dose and duration cautions, therapeutic duplication and do-not-split notices. MFDS data as English JSON.",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://korea-drug-approval-interaction.p.rapidapi.com",
+      "description": "RapidAPI gateway"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/drugs/search": {
+      "get": {
+        "summary": "Search approved drugs by name, company or ingredient",
+        "operationId": "Search drugs",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free text: product name (English or Korean), company or ingredient, e.g. metformin, Tylenol, 타이레놀"
+          },
+          {
+            "name": "ingredient",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exact ingredient name (English, as MFDS lists it), e.g. Metformin Hydrochloride"
+          },
+          {
+            "name": "company",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Company name contains (English or Korean), e.g. Hanmi"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "active (default), cancelled or all",
+              "default": "active",
+              "title": "Status"
+            },
+            "description": "active (default), cancelled or all"
+          },
+          {
+            "name": "prescription",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "prescription or otc"
+          },
+          {
+            "name": "approved_from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Approved on or after, YYYY-MM-DD"
+          },
+          {
+            "name": "approved_to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Approved on or before, YYYY-MM-DD"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Page number, from 1",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Page number, from 1"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Results per page, 1–100",
+              "default": 20,
+              "title": "Per Page"
+            },
+            "description": "Results per page, 1–100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/drugs/{item_seq}": {
+      "get": {
+        "summary": "One approved drug with its DUR summary",
+        "operationId": "Drug detail",
+        "parameters": [
+          {
+            "name": "item_seq",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Seq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/drugs/{item_seq}/interactions": {
+      "get": {
+        "summary": "Products this drug must not be combined with (MFDS 병용금기)",
+        "operationId": "Contraindicated combinations for a drug",
+        "parameters": [
+          {
+            "name": "item_seq",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Seq"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "1–100",
+              "default": 50,
+              "title": "Per Page"
+            },
+            "description": "1–100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/interactions/check": {
+      "get": {
+        "summary": "Is this combination on the MFDS contraindicated list? (two ingredients or two item numbers)",
+        "operationId": "Check a combination",
+        "parameters": [
+          {
+            "name": "a",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Ingredient name (English) or MFDS item_seq, e.g. Itraconazole or 200000913",
+              "examples": [
+                "Itraconazole"
+              ],
+              "title": "A"
+            },
+            "description": "Ingredient name (English) or MFDS item_seq, e.g. Itraconazole or 200000913"
+          },
+          {
+            "name": "b",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Ingredient name (English) or MFDS item_seq, e.g. Simvastatin",
+              "examples": [
+                "Simvastatin"
+              ],
+              "title": "B"
+            },
+            "description": "Ingredient name (English) or MFDS item_seq, e.g. Simvastatin"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ingredients/{name}/drugs": {
+      "get": {
+        "summary": "How many, and which, Korean approvals contain this ingredient (generic-entry check)",
+        "operationId": "Drugs by ingredient",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "active (default), cancelled or all",
+              "default": "active",
+              "title": "Status"
+            },
+            "description": "active (default), cancelled or all"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "1–100",
+              "default": 50,
+              "title": "Per Page"
+            },
+            "description": "1–100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/companies/search": {
+      "get": {
+        "summary": "Companies holding Korean drug approvals",
+        "operationId": "Search companies",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Company name contains (English or Korean), e.g. Pfizer, 한미"
+          },
+          {
+            "name": "business_registration_number",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "10-digit Korean business registration number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "1–100",
+              "default": 20,
+              "title": "Per Page"
+            },
+            "description": "1–100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dur/{type_key}": {
+      "get": {
+        "summary": "One MFDS DUR list (pregnancy, age, elderly, dose, duration, duplication, do-not-split)",
+        "operationId": "DUR list by type",
+        "parameters": [
+          {
+            "name": "type_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Type Key"
+            }
+          },
+          {
+            "name": "ingredient",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Ingredient name (English) contains"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "1–100",
+              "default": 50,
+              "title": "Per Page"
+            },
+            "description": "1–100"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/codes": {
+      "get": {
+        "summary": "DUR types, status values and field notes",
+        "operationId": "Code tables",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
