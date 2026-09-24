@@ -2,7 +2,7 @@
 
 Every drug approved in Korea plus the MFDS contraindication (DUR) lists, as English JSON.
 
-**Try it (free tier, no card):** [https://rapidapi.com/193market/api/korea-drug-approval-interaction](https://rapidapi.com/193market/api/korea-drug-approval-interaction) · also on [api.market](https://api.market/store/193market/korea-drug-approval-interaction)
+**Try it (free tier for evaluation):** [https://rapidapi.com/193market/api/korea-drug-approval-interaction](https://rapidapi.com/193market/api/korea-drug-approval-interaction) · also on [api.market](https://api.market/store/193market/korea-drug-approval-interaction)
 
 Every drug product approved in Korea (about 43,000, with English product, company and ingredient names) and the MFDS DUR contraindication lists: contraindicated combinations (about 800,000 product pairs), pregnancy and age contraindications, elderly, dose and duration cautions, therapeutic duplication and do-not-split notices. MFDS data as English JSON.
 
@@ -98,7 +98,7 @@ The full OpenAPI 3 specification is in [`openapi.json`](openapi.json).
 | Plan | Price | Included per month |
 |---|---|---|
 | BASIC | free | a small monthly quota for evaluation |
-| PRO / ULTRA / MEGA | from $49 / month | 1,000+ requests, per-request overage, higher rate limits |
+| PRO / ULTRA / MEGA | from $49 / month | larger monthly quotas, per-request overage, higher rate limits |
 
 Current prices are always on the [RapidAPI pricing page](https://rapidapi.com/193market/api/korea-drug-approval-interaction/pricing). Error responses (4xx/5xx) are not charged on api.market.
 
